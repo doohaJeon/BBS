@@ -22,7 +22,7 @@ public class BbsDAO {
 			e.printStackTrace();
 		}
 	}
-	
+	//현재 시간을 가져오는 함수 
 	public String getDate() {
 		String SQL = "SELECT NOW()";
 		try {
@@ -36,7 +36,7 @@ public class BbsDAO {
 		}
 		return ""; //데이터베이스 오류
 	}
-	
+	//가장 최근에 올린 게시글 번호에 1을 더하는 함수(다음 게시글번호 생성 함수)
 	public int getNext() {
 		String SQL = "SELECT bbsID FROM BBS ORDER BY bbsID DESC";
 		try {
@@ -51,7 +51,7 @@ public class BbsDAO {
 		}
 		return -1; //데이터베이스 오류
 	}
-	
+	// 게시글 작성기능 함수
 	public int write(String bbsTitle, String userID, String bbsContent) {
 		String SQL = "INSERT INTO BBS VALUES (?, ?, ?, ?, ?, ?)";
 		try {
@@ -68,7 +68,7 @@ public class BbsDAO {
 		}
 		return -1; //데이터베이스 오류
 	}
-	
+	//특정한 하나의 페이지에 최대 10개의 게시글을 담는(10개의 게시글을 보여주는) 함수 
 	public ArrayList<Bbs> getList(int pageNumber) {
 		String SQL = "SELECT * FROM BBS WHERE bbsID < ? AND bbsAvailable = 1 ORDER BY bbsID DESC LIMIT 10";
 		ArrayList<Bbs> list = new ArrayList<Bbs>();
@@ -91,9 +91,9 @@ public class BbsDAO {
 		}
 		return list;
 	}
-	
+	//페이징처리(게시글이 딱 십 단위로 존재하면 다음 페이지에 출력되는 것이 없기에 다음 페이지가 존재하는지 판별해주는 함수) 
 	public boolean nextPage(int pageNumber) {
-		String SQL = "SELECT * FROM BBS WHERE bbsID < ? AND bbsAvailable = 1 ORDER BY bbsID DESC LIMIT 10";
+		String SQL = "SELECT * FROM BBS WHERE bbsID < ? AND bbsAvailable = 1";
 		try {
 			PreparedStatement pstmt = conn.prepareStatement(SQL);
 			pstmt.setInt(1, getNext() - (pageNumber - 1) * 10);
